@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Todo } from './Todo.jsx';
 import { TodoForm } from './TodoForm.jsx';
 import { v4 as uuidv4 } from 'uuid';
@@ -53,50 +53,72 @@ export const TodoWrapper = () => {
         );
     };
 
-    const showProfile = () => {
-        navigate('/profile')
+    const show = ({path}) => {
+        navigate(path)
     }
 
     return (
-        <div className="min-h-screen bg-gray-100 py-8">
-            <div className="max-w-2xl mx-auto">
-                <div className="mb-6 flex justify-between items-center">
-                    <h1 className="text-2xl font-bold text-gray-800">Todo List</h1>
+        <>
+            <div className="mb-6 flex justify-between items-center">
+                <Link to="/">
                     <button 
-                        onClick={toggleCompletedFilter}
-                        className="px-4 py-2 bg-gray-700 text-white rounded-md hover:bg-gray-800 transition-colors duration-200"
+                        onClick={show('/')}
+                        className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200"
                     >
-                        {showCompleted ? 'Show All' : 'Show Completed'}
+                        Go to Landing Page
                     </button>
-                </div>
-
-                <TodoForm addToDo={addToDo} />
+                </Link>
+                <Link to="/profile">
+                    <button 
+                        onClick={show('/profile')}
+                        className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors duration-200"
+                    >
+                        Go to Profile Page
+                    </button>
+                </Link>
                 
-                <div className="mt-4 space-y-2">
-                    {filteredTasks.length === 0 ? (
-                        <p className="text-center text-gray-500">No tasks to show</p>
-                    ) : (
-                        filteredTasks.map((todo) => (
-                            todo.isEditing ? (
-                                <EditTodoForm
-                                    key={todo.id}
-                                    editToDo={editTask}
-                                    task={todo}
-                                />
-                            ) : (
-                                <Todo
-                                    key={todo.id}
-                                    task={todo}
-                                    toggleComplete={toggleComplete}
-                                    deleteToDo={deleteToDo}
-                                    editToDo={editToDo}
-                                    onToggle={handleToggle}
-                                />
-                            )
-                        ))
-                    )}
+            </div>
+
+            <div className="min-h-screen bg-gray-100 py-8">
+                <div className="max-w-2xl mx-auto">
+                    <div className="mb-6 flex justify-between items-center">
+                        <h1 className="text-2xl font-bold text-gray-800">Todo List</h1>
+                        <button 
+                            onClick={toggleCompletedFilter}
+                            className="px-4 py-2 bg-gray-700 text-white rounded-md hover:bg-gray-800 transition-colors duration-200"
+                        >
+                            {showCompleted ? 'Show All' : 'Show Completed'}
+                        </button>
+                    </div>
+
+                    <TodoForm addToDo={addToDo} />
+                    
+                    <div className="mt-4 space-y-2">
+                        {filteredTasks.length === 0 ? (
+                            <p className="text-center text-gray-500">No tasks to show</p>
+                        ) : (
+                            filteredTasks.map((todo) => (
+                                todo.isEditing ? (
+                                    <EditTodoForm
+                                        key={todo.id}
+                                        editToDo={editTask}
+                                        task={todo}
+                                    />
+                                ) : (
+                                    <Todo
+                                        key={todo.id}
+                                        task={todo}
+                                        toggleComplete={toggleComplete}
+                                        deleteToDo={deleteToDo}
+                                        editToDo={editToDo}
+                                        onToggle={handleToggle}
+                                    />
+                                )
+                            ))
+                        )}
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     )
 }

@@ -1,21 +1,25 @@
-import { useState } from 'react'
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import LandingPage from './components/LandingPage';
+
+import ProfilePage from './components/ProfilePage';
 import { TodoWrapper } from './components/TodoWrapper'
-import './App.css'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <div className="App">
-            <h1>to do list</h1>
-            <Router>
-                <Routes>
-                    <Route path='/' element={<TodoWrapper />}></Route>
-                </Routes>
-            </Router>
-        </div>
-  )
+    <Router>
+      <div className="min-h-screen bg-gray-100">
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path='/todo' element={<TodoWrapper />}></Route>
+          
+          {/* Catch-all route to handle any undefined routes */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </div>
+    </Router>
+  );
 }
 
-export default App
+export default App;
