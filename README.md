@@ -27,7 +27,7 @@ npm install
 
 ### 3 Firebase configuration
 a. Create a Firebase Project
-1. Go to firebase[https://console.firebase.google.com/] and sign in.
+1. Go to [firebase](https://console.firebase.google.com/) and sign in.
 2. Click "Create a project," name it, and complete the setup.
 3. In the Firebase Console, click the "Web" icon (</>) to register your app.
 4. Click "Register app" and copy the firebaseConfig object.
