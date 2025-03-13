@@ -1,8 +1,28 @@
-# React + Vite
+# Todo App with Firebase Authentication
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A simple React-based todo list application with user authentication using Firebase, styled with Tailwind CSS, and routed with React Router. Users can sign in with Google, manage their tasks, and view a profile page.
 
-Currently, two official plugins are available:
+## Features
+- Google sign-in via Firebase Authentication
+- Add, edit, complete, and delete tasks
+- Filter completed tasks
+- Profile page with user info and logout option
+- Responsive design with Tailwind CSS
+- Routing with React Router
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Setup 
+
+### 1. Clone the Repository
+Clone this repository to your local machine:
+```bash
+git clone https://github.com/Setevald/WADS_lab.git
+cd WADS_lab
+```
+
+### 2. Install Dependencies
+Install the required packages
+```sh
+npm install
+```
+
+### 3
