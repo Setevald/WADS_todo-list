@@ -21,8 +21,47 @@ cd WADS_lab
 
 ### 2. Install Dependencies
 Install the required packages
-```sh
+```bash
 npm install
 ```
 
-### 3
+### 3 Firebase configuration
+a. Create a Firebase Project
+1. Go to firebase.google.com and sign in.
+2. Click "Add project," name it (e.g., "TodoApp"), and complete the setup.
+3. In the Firebase Console, click the "Web" icon (</>) to register your app.
+4. Click "Register app" and copy the firebaseConfig object.
+
+b. Adding firebase config into the project
+1. Open src/firebase.js (or create it if it doesn’t exist).
+2. Paste your firebaseConfig into the file and initialize Firebase:
+
+```bash
+import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
+
+const firebaseConfig = {
+  apiKey: "your-api-key",
+  authDomain: "your-project-id.firebaseapp.com",
+  projectId: "your-project-id",
+  storageBucket: "your-project-id.appspot.com",
+  messagingSenderId: "your-sender-id",
+  appId: "your-app-id"
+};
+
+const app = initializeApp(firebaseConfig);
+export const auth = getAuth(app);
+export default app;
+```
+
+c.Enable Authentication
+1. In the Firebase Console, go to "Authentication" > "Sign-in method."
+2. Enable "Google" as a sign-in provider and save.
+
+### 4 Run the application
+Start the development server
+```bash
+npm run dev
+```
+
+Open http://localhost:3000 in your browser to view the app.
