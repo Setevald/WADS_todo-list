@@ -1,37 +1,84 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; 
 import { Todo } from './Todo.jsx';
 import { TodoForm } from './TodoForm.jsx';
-import { v4 as uuidv4 } from 'uuid';
 import { EditTodoForm } from './EditToDoForm.jsx';
+import axios from 'axios';
 
-uuidv4();
+// API base URL - adjust this to match your backend
+const API_URL = 'http://localhost:5000/api/todos';
 
 export const TodoWrapper = () => {
     const [toDos, setToDos] = useState([]);
     const [showCompleted, setShowCompleted] = useState(false);
     const navigate = useNavigate(); 
 
-    const addToDo = (toDo) => {
-        setToDos([
-            ...toDos,
-            {
-                id: uuidv4(),
-                task: toDo,
+    // Fetch todos from backend when component mounts
+    useEffect(() => {
+        const fetchTodos = async () => {
+            try {
+                const response = await axios.get(API_URL);
+                // Adapt the backend data structure to match your frontend expectations
+                const adaptedTodos = response.data.data.map(todo => ({
+                    id: todo.id,
+                    task: todo.title,
+                    completed: todo.status === 'completed',
+                    isEditing: false
+                }));
+                setToDos(adaptedTodos);
+            } catch (error) {
+                console.error('Error fetching todos:', error);
+            }
+        };
+        
+        fetchTodos();
+    }, []);
+
+    const addToDo = async (task) => {
+        try {
+            const response = await axios.post(API_URL, {
+                title: task,
+                status: 'pending'
+            });
+            
+            // Add the new todo to the state with appropriate structure
+            const newTodo = {
+                id: response.data.data.id,
+                task: response.data.data.title,
                 completed: false,
-                isEditing: false,
-            },
-        ]);
+                isEditing: false
+            };
+            
+            setToDos([...toDos, newTodo]);
+        } catch (error) {
+            console.error('Error adding todo:', error);
+        }
     };
 
-    const toggleComplete = (id) => {
-        setToDos(toDos.map((todo) =>
-            todo.id === id ? { ...todo, completed: !todo.completed } : todo
-        ));
+    const toggleComplete = async (id) => {
+        try {
+            const todo = toDos.find(t => t.id === id);
+            const newStatus = todo.completed ? 'pending' : 'completed';
+            
+            await axios.put(`${API_URL}/${id}`, {
+                status: newStatus
+            });
+            
+            setToDos(toDos.map(t => 
+                t.id === id ? { ...t, completed: !t.completed } : t
+            ));
+        } catch (error) {
+            console.error('Error updating todo status:', error);
+        }
     };
 
-    const deleteToDo = (id) => {
-        setToDos(toDos.filter((todo) => todo.id !== id));
+    const deleteToDo = async (id) => {
+        try {
+            await axios.delete(`${API_URL}/${id}`);
+            setToDos(toDos.filter(t => t.id !== id));
+        } catch (error) {
+            console.error('Error deleting todo:', error);
+        }
     };
 
     const editToDo = (id) => {
@@ -40,10 +87,18 @@ export const TodoWrapper = () => {
         ));
     };
 
-    const editTask = (task, id) => {
-        setToDos(toDos.map((todo) =>
-            todo.id === id ? { ...todo, task, isEditing: !todo.isEditing } : todo
-        ));
+    const editTask = async (task, id) => {
+        try {
+            await axios.put(`${API_URL}/${id}`, { 
+                title: task 
+            });
+            
+            setToDos(toDos.map(t => 
+                t.id === id ? { ...t, task, isEditing: false } : t
+            ));
+        } catch (error) {
+            console.error('Error updating todo:', error);
+        }
     };
 
     const toggleCompletedFilter = () => {
@@ -55,15 +110,11 @@ export const TodoWrapper = () => {
         : toDos;
 
     const handleToggle = (todoId) => {
-        setToDos((prevToDos) =>
-            prevToDos.map((todo) =>
-                todo.id === todoId ? { ...todo, completed: !todo.completed } : todo
-            )
-        );
+        toggleComplete(todoId);
     };
 
     const showProfile = () => {
-        navigate('/profile'); // This should now work
+        navigate('/profile');
     };
 
     return (
